@@ -138,7 +138,12 @@ func NewS3Client(ctx context.Context, opts S3ClientOpts) (S3Client, error) {
 func (s *s3client) PutFile(bucket, key, path string) error {
 	log.Infof("Saving from %s to s3 (endpoint: %s, bucket: %s, key: %s)", path, s.Endpoint, bucket, key)
 	// NOTE: minio will detect proper mime-type based on file extension
-	_, err := s.minioClient.FPutObject(s.ctx, bucket, key, path, minio.PutObjectOptions{})
+	metadata := make(map[string]string)
+	metadata["x-amz-acl"] = "public-read"
+	putObjectOptions := minio.PutObjectOptions{
+		UserMetadata: metadata,
+	}
+	_, err := s.minioClient.FPutObject(s.ctx, bucket, key, path, putObjectOptions)
 	if err != nil {
 		return errors.WithStack(err)
 	}
