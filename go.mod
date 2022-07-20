@@ -1,4 +1,4 @@
-module github.com/madhuresh04/pkg
+module github.com/nitinmalik00/pkg
 
 go 1.14
 
